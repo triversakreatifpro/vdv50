@@ -1,0 +1,92 @@
+/* --- BASE SETUP --- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Cursor */
+body {
+    cursor: default; /* Fallback */
+}
+
+@media (pointer: fine) {
+    body {
+        cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="6" stroke="%23d4af37" stroke-width="1.5"/><circle cx="12" cy="12" r="2" fill="%23d4af37"/></svg>') 12 12, auto;
+    }
+    button, a, .cursor-pointer {
+        cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="%23d4af37" fill-opacity="0.3" stroke="%23d4af37" stroke-width="1"/></svg>') 12 12, pointer;
+    }
+}
+
+/* --- COMPONENTS --- */
+.nav-link {
+    @apply text-sm font-medium text-gray-400 hover:text-white transition-colors relative py-1 uppercase tracking-wider text-[11px];
+}
+.nav-link.active {
+    @apply text-white;
+}
+.nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-vdv-accent transition-all duration-300;
+}
+.nav-link:hover::after, .nav-link.active::after {
+    @apply w-full;
+}
+
+.btn-primary {
+    @apply bg-gradient-to-br from-vdv-accent to-yellow-600 text-black font-bold px-8 py-3 rounded-full hover:scale-105 transition duration-300 shadow-[0_0_20px_rgba(212,175,55,0.3)] text-sm uppercase tracking-wide;
+}
+
+.btn-outline {
+    @apply bg-transparent border border-vdv-accent text-vdv-accent font-bold px-8 py-3 rounded-full hover:bg-vdv-accent/10 transition duration-300 text-sm uppercase tracking-wide;
+}
+
+.menu-item {
+    @apply block w-full text-left py-2 border-b border-white/5 text-gray-400 hover:text-vdv-accent hover:pl-4 transition-all duration-300 uppercase tracking-widest text-lg md:text-2xl font-header font-bold;
+}
+
+.partner-card {
+    @apply h-20 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-gray-500 font-bold hover:border-vdv-accent/50 hover:text-vdv-accent transition cursor-default;
+}
+
+.timeline-btn {
+    @apply px-6 py-2 rounded-full border border-gray-700 text-gray-400 text-xs font-bold uppercase transition hover:border-vdv-accent hover:text-white;
+}
+.timeline-btn.active {
+    @apply bg-vdv-accent border-vdv-accent text-black;
+}
+
+.social-icon {
+    @apply w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-white hover:text-black transition duration-300;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes spin-slow {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 120s linear infinite; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.animate-fade-in { animation: slideUp 0.6s ease-out forwards; }
+
+/* Google Translate Fixes */
+.goog-te-gadget-simple {
+    background-color: transparent !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    padding: 6px !important;
+    border-radius: 4px !important;
+}
+.goog-te-gadget-simple span { color: #aaa !important; font-size: 10px !important; }
+.goog-te-banner-frame { display: none !important; }
+body { top: 0px !important; }

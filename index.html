@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDV FH UNSRAT - Official Organization Portal</title>
+    <meta name="description" content="Portal Resmi Verein Der Verfahrensrecht Fakultas Hukum Universitas Sam Ratulangi.">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Fonts Premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vdv-main': '#042f2e',
+                        'vdv-accent': '#d4af37',
+                        'vdv-dark': '#020617',
+                        'vdv-surface': '#0f172a',
+                    },
+                    fontFamily: {
+                        'header': ['Cinzel', 'serif'],
+                        'body': ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+        
+        // --- SAFETY SCRIPT: Mencegah ReferenceError ---
+        // Mendefinisikan objek 'app' sementara agar tombol tidak error saat diklik sebelum JS utama siap.
+        window.app = window.app || {
+            nav: (page) => console.log('Navigasi ke:', page, '(Sistem sedang memuat...)'),
+            toggleMenu: () => console.log('Menu toggle (Sistem sedang memuat...)'),
+            adminLogin: () => alert('Sistem sedang memuat, mohon tunggu sebentar...'),
+            handleLogin: (e) => { e.preventDefault(); alert('Sistem sedang memuat...'); },
+            loadStructure: () => {},
+            renderCalendar: () => {},
+            viewEvent: () => {},
+            adminEditEvent: () => {}
+        };
+    </script>
+</head>
+<body class="bg-vdv-dark text-slate-300 font-body antialiased selection:bg-vdv-accent selection:text-vdv-dark overflow-x-hidden">
+
+    <!-- BACKGROUND AMBIENCE -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-vdv-main/40 via-vdv-dark to-vdv-dark"></div>
+        <img src="logo.jpg" class="absolute -right-20 -bottom-20 w-[600px] opacity-[0.03] grayscale rotate-12 blur-sm" onerror="this.style.display='none'">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
+    </div>
+
+    <!-- NAVBAR (Sticky & Glass) -->
+    <header id="main-header" class="fixed w-full z-50 top-0 transition-all duration-300 border-b border-white/5 bg-vdv-dark/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            
+            <!-- Logo Block -->
+            <div class="flex items-center gap-4 cursor-pointer group" onclick="app.nav('home')">
+                <div class="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border border-vdv-accent/50 group-hover:border-vdv-accent transition shadow-lg shadow-vdv-accent/10">
+                    <img src="logo.jpg" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=VDV&background=042f2e&color=d4af37'">
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-header font-bold text-white text-lg tracking-wider group-hover:text-vdv-accent transition">VDV FH UNSRAT</span>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-[0.2em] hidden md:block">Verein Der Verfahrensrecht</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav (Essential Links) -->
+            <nav class="hidden lg:flex items-center gap-8">
+                <button onclick="app.nav('home')" class="nav-link active">Beranda</button>
+                <button onclick="app.nav('structure')" class="nav-link">Struktur</button>
+                <button onclick="app.nav('calendar')" class="nav-link">Agenda</button>
+                <button onclick="app.nav('gallery')" class="nav-link">Galeri</button>
+            </nav>
+
+            <!-- Actions (Translate + Menu) -->
+            <div class="flex items-center gap-4">
+                <div id="google_translate_element" class="hidden md:block scale-90 origin-right"></div>
+                
+                <!-- HAMBURGER MENU BUTTON -->
+                <button onclick="app.toggleMenu()" class="relative group p-2 hover:bg-white/5 rounded-full transition">
+                    <div class="flex flex-col gap-1.5 items-end">
+                        <span class="w-8 h-0.5 bg-vdv-accent group-hover:w-6 transition-all duration-300"></span>
+                        <span class="w-6 h-0.5 bg-white group-hover:w-8 transition-all duration-300"></span>
+                        <span class="w-4 h-0.5 bg-gray-400 group-hover:w-6 transition-all duration-300"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- OFF-CANVAS MENU (Overlay) -->
+    <div id="side-menu" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute right-0 top-0 h-full w-full md:w-[400px] bg-vdv-surface border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-out" id="side-menu-panel">
+            <div class="p-8 h-full flex flex-col">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="font-header text-2xl text-vdv-accent">Menu Utama</h3>
+                    <button onclick="app.toggleMenu()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
+                </div>
+
+                <div class="space-y-2 flex-grow overflow-y-auto">
+                    <button onclick="app.nav('home')" class="menu-item">Beranda</button>
+                    <button onclick="app.nav('about')" class="menu-item">Sejarah & Visi Misi</button>
+                    <button onclick="app.nav('structure')" class="menu-item">Struktur Organisasi</button>
+                    <button onclick="app.nav('calendar')" class="menu-item">Kalender Event</button>
+                    <button onclick="app.nav('gallery')" class="menu-item">Galeri Prestasi</button>
+                    <button onclick="app.nav('database')" class="menu-item">Database Member</button>
+                    <div class="my-4 border-t border-white/10"></div>
+                    <button onclick="app.adminLogin()" class="menu-item text-sm flex items-center gap-2 text-red-400 hover:text-red-300">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Login Pengurus
+                    </button>
+                </div>
+
+                <!-- Socials in Menu -->
+                <div class="mt-auto">
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Ikuti Kami</p>
+                    <div class="flex gap-4">
+                        <a href="https://instagram.com" target="_blank" class="social-icon"><i data-lucide="instagram"></i></a>
+                        <a href="https://tiktok.com" target="_blank" class="social-icon"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                        <a href="https://facebook.com" target="_blank" class="social-icon"><i data-lucide="facebook"></i></a>
+                        <a href="https://youtube.com" target="_blank" class="social-icon"><i data-lucide="youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="relative z-10 pt-20">
+
+        <!-- HERO SECTION -->
+        <section id="home" class="page-section min-h-screen flex items-center relative">
+            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate-slide-up">
+                    <div class="inline-flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/10 backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-xs font-bold tracking-widest text-vdv-accent uppercase">Pendaftaran VR Gen 5 Dibuka</span>
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-7xl font-header font-bold text-white leading-[1.1]">
+                        Menegakkan <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-vdv-accent to-yellow-200">Keadilan</span> <br>
+                        Sesuai Prosedur.
+                    </h1>
+                    
+                    <p class="text-lg text-gray-400 max-w-lg leading-relaxed">
+                        Wadah mahasiswa Fakultas Hukum Unsrat untuk menguasai seni litigasi, peradilan semu, dan integritas profesi hukum.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="app.nav('calendar')" class="btn-primary">Lihat Agenda</button>
+                        <button onclick="app.nav('about')" class="btn-outline">Tentang Kami</button>
+                    </div>
+
+                    <!-- Live Stats -->
+                    <div class="pt-8 border-t border-white/10 flex gap-8">
+                        <div>
+                            <h4 class="text-3xl font-bold text-white" id="stat-total">0</h4>
+                            <p class="text-xs text-gray-500 uppercase">Total Anggota</p>
+                        </div>
+                        <div>
+                            <h4 class="text-3xl font-bold text-white flex items-center gap-2">
+                                <span id="stat-online">0</span>
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+                            </h4>
+                            <p class="text-xs text-gray-500 uppercase">Online Sekarang</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Visual -->
+                <div class="relative hidden md:block animate-fade-in delay-200">
+                    <div class="absolute inset-0 bg-vdv-accent/20 blur-[100px] rounded-full"></div>
+                    <img src="logo.jpg" class="relative w-3/4 mx-auto rounded-2xl border border-white/10 shadow-2xl shadow-vdv-accent/20 hover:scale-105 transition duration-700" onerror="this.src='https://ui-avatars.com/api/?name=VDV&size=500&background=042f2e&color=d4af37'">
+                    
+                    <!-- Floating Cards -->
+                    <div class="absolute -bottom-10 -left-10 bg-vdv-surface p-4 rounded-xl border border-white/10 shadow-xl animate-float">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-green-500/20 rounded-lg text-green-500"><i data-lucide="trophy" class="w-5 h-5"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400">Prestasi Terbaru</p>
+                                <p class="font-bold text-white text-sm">Juara 1 NMCC 2023</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEJARAH & VISI MISI -->
+        <section id="about" class="page-section hidden py-24 px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-header font-bold text-white mb-4">Integritas & Dedikasi</h2>
+                    <div class="w-24 h-1 bg-vdv-accent mx-auto"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-16 items-start">
+                    <div class="space-y-6 text-gray-300 text-lg leading-relaxed text-justify">
+                        <p>
+                            <span class="text-vdv-accent font-bold text-xl">Verein Der Verfahrensrecht (VDV)</span> bukan sekadar organisasi, melainkan kawah candradimuka bagi calon praktisi hukum. Didirikan oleh <strong class="text-white">Kak Ridwan Pasorong, S.H.</strong>, VDV lahir untuk menjembatani kesenjangan antara teori akademis dan realitas persidangan.
+                        </p>
+                        <p>
+                            Kami percaya bahwa hukum tanpa prosedur adalah anarki. Oleh karena itu, kami fokus mencetak kader yang disiplin, teliti, dan tangguh dalam beracara.
+                        </p>
+                    </div>
+                    <div class="grid gap-6">
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-vdv-accent/50 transition">
+                            <i data-lucide="target" class="w-8 h-8 text-vdv-accent mb-4"></i>
+                            <h3 class="text-xl font-header font-bold text-white mb-2">Visi</h3>
+                            <p class="text-gray-400 text-sm">Menjadi pusat keunggulan studi hukum acara yang melahirkan yuris berintegritas dan profesional.</p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-vdv-accent/50 transition">
+                            <i data-lucide="users" class="w-8 h-8 text-vdv-accent mb-4"></i>
+                            <h3 class="text-xl font-header font-bold text-white mb-2">Misi</h3>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li class="flex gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i> Pendidikan & Pelatihan Litigasi.</li>
+                                <li class="flex gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i> Kompetisi Peradilan Semu Nasional.</li>
+                                <li class="flex gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i> Pengabdian Masyarakat Berbasis Hukum.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STRUKTUR ORGANISASI (Timeline) -->
+        <section id="structure" class="page-section hidden py-24 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-header font-bold text-white">Struktur Kepemimpinan</h2>
+                    <p class="text-gray-400 mt-2">Estafet kepemimpinan dari masa ke masa.</p>
+                </div>
+
+                <!-- Timeline Navigation -->
+                <div class="flex justify-center gap-4 mb-12 flex-wrap">
+                    <button class="timeline-btn" onclick="app.loadStructure(1)">Periode 1</button>
+                    <button class="timeline-btn" onclick="app.loadStructure(2)">Periode 2</button>
+                    <button class="timeline-btn" onclick="app.loadStructure(3)">Periode 3</button>
+                    <button class="timeline-btn" onclick="app.loadStructure(4)">Periode 4</button>
+                    <button class="timeline-btn active" onclick="app.loadStructure(5)">Periode 5 (Now)</button>
+                </div>
+
+                <!-- Chart Content -->
+                <div id="org-chart-display" class="relative bg-vdv-surface border border-white/10 rounded-3xl p-10 min-h-[500px]">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vdv-accent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KALENDER & EVENT -->
+        <section id="calendar" class="page-section hidden py-24 px-6">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-header font-bold text-white text-center mb-12">Agenda Organisasi</h2>
+                
+                <div class="grid lg:grid-cols-12 gap-8">
+                    <!-- Event List -->
+                    <div class="lg:col-span-4 space-y-4" id="event-list-container"></div>
+
+                    <!-- Event Detail -->
+                    <div class="lg:col-span-8 bg-gradient-to-br from-vdv-surface to-black border border-white/10 rounded-3xl p-8 relative flex flex-col justify-center items-center text-center">
+                        <div id="admin-edit-btn" class="hidden absolute top-6 right-6">
+                            <button onclick="app.adminEditEvent()" class="text-xs bg-red-900/50 text-red-200 px-3 py-1 rounded border border-red-500/30 hover:bg-red-900 transition flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-3 h-3"></i> Edit Mode
+                            </button>
+                        </div>
+                        <div id="event-detail-content" class="w-full">
+                            <i data-lucide="calendar-search" class="w-20 h-20 text-gray-700 mx-auto mb-4"></i>
+                            <p class="text-gray-500">Pilih agenda di samping untuk melihat detail.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERI & PRESTASI -->
+        <section id="gallery" class="page-section hidden py-24 px-6">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl font-header font-bold text-white text-center mb-12">Jejak Prestasi</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Item 1 -->
+                    <div class="gallery-card group">
+                        <div class="h-64 bg-gray-800 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-gray-500 font-bold group-hover:scale-110 transition duration-700">FOTO DELEGASI</div>
+                            <div class="absolute top-4 right-4 bg-vdv-accent text-black text-xs font-bold px-3 py-1 rounded-full">JUARA UMUM</div>
+                        </div>
+                        <div class="p-6 bg-vdv-surface border-t border-white/5">
+                            <h4 class="text-xl font-bold text-white mb-2">NMCC Piala Bismar Siregar</h4>
+                            <p class="text-sm text-gray-400 mb-4">Delegasi 2023 - Berkas Terbaik & Juara 1</p>
+                            <div class="border-t border-white/10 pt-4">
+                                <p class="text-xs text-gray-500">Ketua: Ahmad Dhani + 14 Anggota</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="gallery-card group">
+                        <div class="h-64 bg-gray-800 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-gray-500 font-bold group-hover:scale-110 transition duration-700">FOTO VMCC</div>
+                            <div class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">INTERNAL</div>
+                        </div>
+                        <div class="p-6 bg-vdv-surface border-t border-white/5">
+                            <h4 class="text-xl font-bold text-white mb-2">VMCC 2024</h4>
+                            <p class="text-sm text-gray-400 mb-4">Kompetisi Internal Angkatan Baru</p>
+                            <div class="border-t border-white/10 pt-4">
+                                <p class="text-xs text-gray-500">Pemenang: Chamber A (Penuntut Umum Terbaik)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATABASE & ADMIN -->
+        <section id="database" class="page-section hidden py-24 px-6">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+                <!-- Public DB -->
+                <div>
+                    <h2 class="text-2xl font-header font-bold text-white mb-6">Database Anggota</h2>
+                    <div class="bg-vdv-surface border border-white/10 rounded-2xl p-1 overflow-hidden">
+                        <div class="max-h-[500px] overflow-y-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-black/50 text-vdv-accent text-xs uppercase sticky top-0 backdrop-blur-md">
+                                    <tr>
+                                        <th class="p-4">Nama</th>
+                                        <th class="p-4">Status</th>
+                                        <th class="p-4">Terakhir Aktif</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="member-table-body" class="text-sm text-gray-400 divide-y divide-white/5"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partners & Finance -->
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-header font-bold text-white mb-6">Partnership</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="partner-card">LAW FIRM A</div>
+                            <div class="partner-card">MEDIA HUKUM</div>
+                            <div class="partner-card">UNSRAT</div>
+                            <div class="partner-card">KOPI YURIS</div>
+                        </div>
+                    </div>
+
+                    <div id="finance-panel" class="hidden bg-gradient-to-r from-red-950/30 to-black border border-red-900/30 p-6 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 bg-red-900 text-white text-[10px] font-bold px-6 py-2 rotate-45 shadow-lg">RAHASIA</div>
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="wallet" class="text-green-500"></i> Kas Organisasi</h3>
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-black/40 p-2 rounded border border-white/5">
+                                <p class="text-[10px] text-gray-500">Masuk</p>
+                                <p class="text-green-400 font-bold">15.0jt</p>
+                            </div>
+                            <div class="bg-black/40 p-2 rounded border border-white/5">
+                                <p class="text-[10px] text-gray-500">Keluar</p>
+                                <p class="text-red-400 font-bold">4.2jt</p>
+                            </div>
+                            <div class="bg-black/40 p-2 rounded border border-white/5">
+                                <p class="text-[10px] text-gray-500">Saldo</p>
+                                <p class="text-vdv-accent font-bold">10.8jt</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-white/10 pt-20 pb-8 mt-20">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 mb-12">
+            <div class="col-span-1 md:col-span-2">
+                <h2 class="text-2xl font-header font-bold text-white mb-4">VDV FH UNSRAT</h2>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-sm">
+                    Organisasi kemahasiswaan Fakultas Hukum Universitas Sam Ratulangi yang berdedikasi pada pengembangan hukum acara dan integritas profesi hukum.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Navigasi</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li><button onclick="app.nav('home')" class="hover:text-vdv-accent">Beranda</button></li>
+                    <li><button onclick="app.nav('about')" class="hover:text-vdv-accent">Tentang Kami</button></li>
+                    <li><button onclick="app.nav('calendar')" class="hover:text-vdv-accent">Info Event</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Kontak</h4>
+                <p class="text-gray-500 text-sm mb-4">Gedung Fakultas Hukum Unsrat, Bahu, Manado.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-white/5 pt-8 text-center">
+            <p class="text-xs text-gray-600">&copy; 2025 Verein Der Verfahrensrecht. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL LOGIN -->
+    <div id="login-modal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-vdv-surface border border-white/10 p-8 rounded-2xl w-full max-w-md shadow-2xl relative">
+            <button onclick="document.getElementById('login-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i data-lucide="x"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-black rounded-full mx-auto mb-4 border border-vdv-accent flex items-center justify-center">
+                    <i data-lucide="user" class="text-vdv-accent w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-header font-bold text-white">Login Anggota</h3>
+                <p class="text-sm text-gray-400">Data anda akan tersimpan di database kami.</p>
+            </div>
+            <form onsubmit="app.handleLogin(event)" class="space-y-4">
+                <input type="text" id="login-name-input" required placeholder="Nama Lengkap" class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-vdv-accent outline-none transition">
+                <button class="w-full bg-vdv-accent text-black font-bold py-3 rounded-lg hover:bg-yellow-500 transition">Masuk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'id', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- App Logic -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
